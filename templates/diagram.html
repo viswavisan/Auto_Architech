@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG Diagram Example</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .diagram { position: relative; width: 100%; min-height: 600px; border: 1px dashed #ccc; overflow: auto; }
+        .component { display: flex; flex-direction: column; justify-content: center; align-items: center; position: absolute; }
+        .client { background-color: #e0f7fa; }
+        .server { background-color: #ffe0b2; }
+        .database { background-color: #c8e6c9; }
+        .button-container { display: flex; gap: 15px; }
+        button { background-color: #007BFF; color: white; border: none; border-radius: 5px; padding: 10px 20px; font-size: 16px; cursor: pointer; transition: background-color 0.3s, transform 0.2s; }
+        button:hover { background-color: #0056b3; transform: scale(1.05); }
+        button:active { transform: scale(0.95); }
+        .container { display: flex; }
+        .sidebar { width: 300px; background-color: #f0f0f0; margin-left: 15px; transition: transform 0.3s ease; }
+        .sidebar-header { display: flex; justify-content: space-between; align-items: center; padding: 1px; background-color: #a3a5a7; color: white; }
+        .sidebar-content { padding: 10px; }
+        .input-group { display: flex; align-items: center; margin-bottom: 10px; }
+        .input-group label { margin-right: 10px; width: 100px; }
+        .input-group input { flex: 1; padding: 5px; border: 1px solid #ccc; border-radius: 4px; }
+        .svg { position: absolute; height: 100%; width: 100%; }
+        .highlight {
+            filter: drop-shadow(0 0 10px #4004f1); /* Glow effect */
+}
+    </style>
+</head>
+<body>
+
+<div class="button-container">
+    <select id="dproject"><option value="screenbros">screenbros</option></select>
+    <select id="dcomp"></select>
+    <button onclick="add_component()">Add Component</button>
+    <button onclick="save()">Save</button>
+    <button onclick="load()">Load</button>
+    <button>Freeze</button>
+    <button onclick="refresh()">Refresh</button>
+</div>
+
+<div class="container">
+    <div class="diagram">
+        <svg id="svg" class="diagramsvg" width="120%" height="120%" ></svg>  
+    </div>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <span>Properties</span>
+            <span style="cursor: pointer;" onclick="$('#sidebar').hide()">&#x274E</span>
+        </div>
+
+        <div class="sidebar-content">
+            <div class="input-group">
+                <label for="id">ID:</label>
+                <input type="text" id="id" placeholder="ID" readonly>
+            </div>
+            <div class="input-group">
+                <label for="Type">Type:</label>
+                <input type="text" id="Type" placeholder="Type" readonly>
+            </div>
+            <div class="input-group">
+                <label for="width">width:</label>
+                <input type="number" id="width" placeholder="width">
+            </div>
+            <div class="input-group">
+                <label for="height">height:</label>
+                <input type="number" id="height" placeholder="height">
+            </div>
+            <div class="input-group">
+                <label for="x">x:</label>
+                <input type="number" id="x" placeholder="x">
+            </div>
+            <div class="input-group">
+                <label for="y">y:</label>
+                <input type="number" id="y" placeholder="y">
+            </div>
+
+            <div class="input-group">
+                <button onclick="deleteComponent()">Delete</button>
+            </div>
+        </div>
+    </div> 
+</div>
+
+<script>
+
+load_components();
+    function load_components() {
+        let comps = ['api', 'aws', 'code_commit', 'docker', 'ec2', 'ecr', 'fastapi', 'front_end', 'grafana', 'jenkins', 'kubernetes', 'middleware', 'mysql', 'vscode', 'box'];
+        $('#dcomp').empty();
+        for (var i of comps) {
+            $('#dcomp').append($('<option></option>').val(i).text(i));
+        }
+    }
+
+function add_component() {
+    var name = $('#dcomp').val();
+    if (name=='box'){add_element('.diagramsvg','rect', {"class":"component","id":`component_${Date.now()}`,'x':100,'y':100,'width':100,'height':100,'fill':'none','stroke':'black'})}
+    else            {add_element('.diagramsvg','image',{"class":"component","id":`component_${Date.now()}`,"x":50,"y":50,  "width":100,"height":100,"href":`/static/architect/${name}.png`})}
+}
+
+
+function add_element(parent,type,attr) {
+    var element = document.createElementNS("http://www.w3.org/2000/svg", type);
+    for( var key in attr) {element.setAttribute(key, attr[key])}
+    document.querySelector(parent).appendChild(element);
+    refresh()
+}
+load()
+$('#sidebar').hide()
+function load() {
+        $.ajax({
+            url: '/get_data',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ 'project': 'screenbros' }),
+            success: function(response) { 
+                $('.diagramsvg').empty();
+                for (let key in response) {
+                    const element = response[key];
+                    console.log(element.type)
+                    if (element.type=='rect'){add_element('.diagramsvg',element.type,{"class":element.class,"id":element.id,"x":element.x,"y":element.y,"width":element.width,"height":element.height,'stroke':element.stroke,'fill':'none'})}
+                    else                     {add_element('.diagramsvg',element.type,{"class":element.class,"id":element.id,"x":element.x,"y":element.y,"width":element.width,"height":element.height,"href":`/static/architect/${element.icon}`})}
+                    }
+            },
+            error: function(xhr, status, error) { alert('Error loading data: ' + error); }
+        });
+    }
+
+    function save() {
+        const elementData = {};
+        $('.diagramsvg .component').each(function() {
+            var data = {
+                type:this.tagName,
+                class: this.getAttribute('class'),
+                id: this.id,
+                x:this.x.baseVal.value,
+                y: this.y.baseVal.value,
+                width:this.width.baseVal.value,
+                height:this.height.baseVal.value,}
+            if (this.tagName=='rect'){
+                data.stroke=this.getAttribute('stroke');
+                data.fill= 'none'}
+            else{data.icon= this.href.baseVal.split('/').pop();}
+            elementData[this.id] = data;   
+        });
+
+        $.ajax({
+            url: '/save_data',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ 'project': 'screenbros', 'value': elementData }),
+            success: function(response) { alert('Data saved successfully: ' + response); },
+            error: function(xhr, status, error) { alert('Error saving data: ' + error); }
+        });
+        
+    }
+
+function refresh(){
+    $('.component').off('click').on('click', function(event) {
+        $('#sidebar').show()
+        event.stopPropagation();
+        $('.component').removeClass('highlight');
+        $(this).addClass('highlight');
+
+        $('#id').val(this.id);
+        $('#Type').val(this.tagName);
+        $('#x').val(this.getAttribute('x'));
+        $('#y').val(this.getAttribute('y'));
+        $('#width').val(this.getAttribute('width'));
+        $('#height').val(this.getAttribute('height'));
+    });
+
+    $('.component').on('mousedown', function(event) {
+        event.preventDefault();
+        const selectedComponent = $(this);
+        console.log(event.clientX)
+        const offset = selectedComponent.offset();
+
+        $(document).on('mousemove.drag', function(event) {
+            const newX = event.clientX -200
+            const newY = event.clientY -200
+            selectedComponent.attr('x', newX);
+            selectedComponent.attr('y', newY);
+
+        });
+
+        $(document).on('mouseup.drag', function() {
+            $(document).off('mousemove.drag mouseup.drag');
+        });
+    });
+
+
+}
+
+    function deleteComponent() {
+        const selectedComponent = $('.component.highlight');
+        if (selectedComponent.length) {
+            selectedComponent.remove();
+            unselect()
+        }
+    }
+
+    $('.diagramsvg').on('click', unselect)
+
+    function unselect(){
+        $('#sidebar').hide()
+        $('.component').removeClass('highlight'); 
+        for (var i of ['#id','#x','#y','#Type','#width','#height'])
+            {$(i).val('')}}
+
+
+     $(' #x , #y, #width , #height').on('change', function() {
+    const selectedComponent = $('.component.highlight');
+    if (selectedComponent.length) {
+        selectedComponent.attr(this.id, $(this).val());
+    }
+});
+
+
+
+
+
+
+
+
+
+
+    
+
+ 
+</script>
+</body>
+</html>

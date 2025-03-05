@@ -201,7 +201,7 @@ $(document).ready(function() {
     </header>
 
     <div class="main-container">
-        <div class="navcontainer">
+        <div class="navcontainer navclose">
             <nav class="nav">
                 <div class="nav-upper-options">
                     <div class="nav-option option1">
@@ -225,8 +225,8 @@ $(document).ready(function() {
                     </div>
 
                     <div class="nav-option option5">
-                        <img src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183323/10.png" class="nav-img" alt="blog">
-                        <h3> Profile</h3>
+                        <img src="/static/images/ticket.png" class="nav-img" alt="ticket">
+                        <h3> Ticket</h3>
                     </div>
 
                     <div class="nav-option option6">
@@ -308,14 +308,14 @@ $(document).ready(function() {
                   
                     <table>
                       <tr>
-                        {% for key in data[0].keys() %}
+                        {% for key in ['id','project','description','start_date','updated_date'] %}
                           <th>{{key}}</th>
                         {% endfor %}
                       </tr>
                         {% for row in data %}
                       <tr>
-                          {% for value in row.values() %}
-                            <td>{{ value }}</td>
+                          {% for key in ['id','project','description','start_date','updated_date'] %}
+                            <td>{{ row[key] }}</td>
                           {% endfor %}
                         </tr>
                       {% endfor %}
@@ -358,9 +358,16 @@ $(document).ready(function() {
 
                   </div>
               </div>
+
+
+
           </div>
 
           </div>
+
+          <div id="page3" class="page"> {% include 'diagram.html' %} </div>
+
+          <div id="page4" class="page"> {% include 'pipeline.html' %} </div>
 
         </div>
     </div>
