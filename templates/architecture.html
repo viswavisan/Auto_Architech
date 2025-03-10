@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Auto Architect</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- <script src="/static/js/messagebox.js"></script> -->
 </head>
 
 <style>
@@ -193,8 +194,10 @@ $(document).ready(function() {
         <div class="message">
             <div class="circle"></div>
             <img src="/static/images/notification.png" class="icn" alt="">
+            <span>{{user}}</span>
             <div class="dp">
-              <img src="/static/images/profile.png" class="dpicn" alt="dp">
+              
+              <img src={{profile}} class="dpicn" alt="dp">
             </div>
         </div>
 
@@ -234,7 +237,7 @@ $(document).ready(function() {
                         <h3> Settings</h3>
                     </div>
 
-                    <div class="nav-option logout">
+                    <div class="nav-option logout" onclick="logout()">
                         <img src= "https://media.geeksforgeeks.org/wp-content/uploads/20221210183321/7.png" class="nav-img" alt="logout">
                         <h3>Logout</h3>
                     </div>
@@ -254,8 +257,8 @@ $(document).ready(function() {
             </div>
 
             <div class="box-container">
-                <div class="box box1">
-                    <div class="text">
+                <div class="box box1" onclick="showMessage('working fine','green','top')">
+                    <div class="text" >
                         <h2 class="topic-heading">60.5k</h2>
                         <h2 class="topic">Article Views</h2>
                     </div>
@@ -263,7 +266,7 @@ $(document).ready(function() {
                     <img src= "https://media.geeksforgeeks.org/wp-content/uploads/20221210184645/Untitled-design-(31).png" alt="Views">
                 </div>
 
-                <div class="box box2">
+                <div class="box box2" onclick="showMessage('Error','red','top')">
                     <div class="text">
                         <h2 class="topic-heading">150</h2>
                         <h2 class="topic">Likes</h2>
@@ -368,10 +371,21 @@ $(document).ready(function() {
           <div id="page3" class="page"> {% include 'diagram.html' %} </div>
 
           <div id="page4" class="page"> {% include 'pipeline.html' %} </div>
+          <div id="page5" class="page"> </div>
+          <div id="page6" class="page"> {% include 'settings.html' %}</div>
+          <div id="page7" class="page"> logout <button onclick="logout()"></button> </div>
 
         </div>
     </div>
 
+<script>
+  function logout() {
+    document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+            document.cookie = "expiry=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
 
+            // Redirect to the login page or home page after clearing cookies
+            window.location.href = '/login';
+  }
+</script>
 </body>
 </html>

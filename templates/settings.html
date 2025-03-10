@@ -1,0 +1,29 @@
+<img src="http://127.0.0.1:8000/2fa/qr?username=viswavisan" alt="QR Code">
+<br>
+
+viswavisan
+
+<input id="2fatoken"></input>
+<button id="2faverify" onclick="verify()">verify</button>
+
+<script>
+function verify() {
+    // Get the token value from the input field
+    const token = $('#2fatoken').val();
+    
+    // Make the AJAX request
+    $.ajax({
+        url: `/2fa/verify?username=viswavisan&token=${token}`, // Corrected URL
+        type: 'POST',
+        contentType: 'application/json',
+        // If you don't need to send additional data, you can remove the data field
+        data: JSON.stringify({}), // Send an empty object if no additional data is needed
+        success: function(response) {
+            alert('Verification successful: ' + response.message); // Adjust response handling
+        },
+        error: function(xhr, status, error) {
+            alert('Error verifying token: ' + error); // Adjust error handling
+        }
+    });
+}
+</script>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: sans-serif;
+            line-height: 1.5;
+            min-height: 100vh;
+            background: #f3f3f3;
+            margin: 0;
+        }
+
+        .main {
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            width: 400px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #4CAF50;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            text-align: left;
+            color: #555;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            background-color: #4CAF50;
+            width: 100%;
+            font-size: 16px;
+        }
+
+        .wrap {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        .social-button {
+            background-color: #3b5998; /* Facebook color */
+        }
+
+        .google-button {
+            background-color: #db4437; /* Google color */
+        }
+
+        .github-button {
+            background-color: #333; /* GitHub color */
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <h1>Login</h1>
+        <form id="loginForm">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+
+            <button type="submit">Login</button>
+            <label for="username">SSO:</label>
+        </form>
+        
+        <div class="wrap">
+            <button id="googleSignIn" class="google-button"><i class="fab fa-google"></i><br>Google</button>
+            <button id="facebookSignIn" class="social-button"><i class="fab fa-facebook"></i><br>Facebook</button>
+            <button id="githubSignIn" class="github-button"> <i class="fab fa-github"></i><br>Github</button>
+            <button id="2FA" class="github-button"><img src="/static/images/mobile.png" width="30px" alt="Mobile Icon"><br>2FA</button>
+        </div>
+        <p>Not registered? <a href="#">Create an account</a></p>
+    </div>
+    <script>
+        document.getElementById('googleSignIn').addEventListener('click', function() {
+            // Implement Google Sign-In logic here
+            alert("Google Sign-In clicked!");
+        });
+
+        document.getElementById('facebookSignIn').addEventListener('click', function() {
+            // Implement Facebook Sign-In logic here
+            alert("Facebook Sign-In clicked!");
+        });
+
+        document.getElementById('githubSignIn').addEventListener('click', function() {
+            window.location.href ='/login_with_git_hub'
+        });
+    </script>
+</body>
+</html>

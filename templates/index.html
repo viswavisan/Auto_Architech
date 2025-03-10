@@ -1,0 +1,78 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2FA with FastAPI</title>
+</head>
+<body>
+    <h1>Two-Factor Authentication with FastAPI</h1>
+    <h2>Login</h2>
+    <form id="login-form">
+        <input type="text" id="username" placeholder="Username" value="user@example.com" required>
+        <input type="password" id="password" placeholder="Password" value="fakehashedpassword" required>
+        <button type="submit">Login</button>
+    </form>
+    <p id="login-message"></p>
+
+    <h2>Verify 2FA</h2>
+    <form id="verify-form" style="display: none;">
+        <input type="text" id="totp-token" placeholder="TOTP Token" required>
+        <button type="submit">Verify</button>
+    </form>
+    <p id="verify-message"></p>
+
+    <script>
+        document.getElementById('login-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            const response = await fetch('/token', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    username: username,
+                    password: password,
+                }),
+            });
+
+            const data = await response.json();
+            console.log(data)
+            if (response.ok) {
+                document.getElementById('login-message').innerText = `Login successful! Your TOTP token is: ${data.totp_token}`;
+                document.getElementById('verify-form').style.display = 'block';
+            } else {
+                document.getElementById('login-message').innerText = 'Login failed. Please check your credentials.';
+            }
+        };
+
+        document.getElementById('verify-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const token = document.getElementById('totp-token').value;
+
+            const response = await fetch('/verify-2fa', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    username: username,
+                    token: token,
+                }),
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                document.getElementById('verify-message').innerText = data.message;
+            } else {
+                document.getElementById('verify-message').innerText = '2FA verification failed. Please check your token.';
+            }
+        };
+    </script>
+</body>
+</html>
