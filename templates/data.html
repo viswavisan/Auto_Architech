@@ -1,0 +1,78 @@
+<link rel="stylesheet" href="/static/css/data.css">
+<script src="/static/js/data.js"></script>
+
+    <div class="report-container">
+      <div class="report-header">
+        <h1 class="Projects">Details</h1>
+        <input type="file" id="fileInput" required>
+        <button class="view" id="upload">Upload</button>
+        <div id="response"></div>
+        <div id="error"></div>
+        <button class="view" onclick="fetch_data()">Fetch</button>
+          
+      </div>
+      <div class="report-body">
+        
+        <div id="toolbar1">
+         
+          <div>
+              <span>Column</span>
+              <input id="columnname" onchange="field_change()" value="">
+          </div>
+          <div>
+              <span>Value</span>
+              <input id="columnvalue" onchange="field_change()" value="">
+          </div>
+
+          <button onclick="filterfun()">Filter</button>
+          <button id='down'  onclick="document.getElementById('query-div').style.display = document.getElementById('query-div').style.display=='none' ? 'none' : 'block'"></button>
+
+        </div>
+
+
+        <div id="query-div" > 
+
+          From&nbsp;<input type="datetime-local"  id="date-from1" onchange="field_change()"> &emsp; 
+          To&nbsp;<input type="datetime-local"  id="date-to1" onchange="field_change()"> &emsp;
+          visible&nbsp;<input id="visible" onchange="field_change()" value="*"> &emsp;
+          
+          <input type="checkbox" id="wrap"> 
+          <label for="wrap">Wrap text</label> &emsp;
+          <br>
+          <input id="query"> &emsp;  </div>    
+          <br><br>
+
+          <div class="filter2">
+              <div>
+                  <button  id='pre' onclick="next(-1)"><<</button>
+                  <span id='page'>0-10</span>
+                  <button  id='next' onclick="next(1)">>></button>
+              </div>
+              
+              <div>
+                  Count:
+                  <span  id="count">HTML</span>
+              </div>
+      
+              <div>
+                  GoTo <input id='start'  value="0" onchange="field_change()"> 
+                  <button id='goto' onclick="filterfun()">>></button>
+              </div>
+              
+              <div>
+                  per page <input id='rows' value="10" onchange="field_change()"> 
+              </div>
+      
+              <div>
+                  order by
+                  <select id="order" class="filter2-order" onchange="field_change()"> 
+                      {% for i in ['date_entered','bre_date','customer_date','loan_date','disbursement_date']%}<option value="{{ i }}">{{ i }}</option>{% endfor %}
+                  </select>
+              </div>
+          </div>
+  
+          <br>
+          <table id="dynamic" ><tr><th></th></tr></table>
+      </div>
+   
+      </div>

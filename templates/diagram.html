@@ -12,9 +12,9 @@
         .server { background-color: #ffe0b2; }
         .database { background-color: #c8e6c9; }
         .button-container { display: flex; gap: 15px; }
-        button { background-color: #007BFF; color: white; border: none; border-radius: 5px; padding: 10px 20px; font-size: 16px; cursor: pointer; transition: background-color 0.3s, transform 0.2s; }
-        button:hover { background-color: #0056b3; transform: scale(1.05); }
-        button:active { transform: scale(0.95); }
+        .dbutton { background-color: #007BFF; color: white; border: none; border-radius: 5px; padding: 10px 20px; font-size: 16px; cursor: pointer; transition: background-color 0.3s, transform 0.2s; }
+        .dbutton:hover { background-color: #0056b3; transform: scale(1.05); }
+        .dbutton:active { transform: scale(0.95); }
         .container { display: flex; }
         .sidebar { width: 300px; background-color: #f0f0f0; margin-left: 15px; transition: transform 0.3s ease; }
         .sidebar-header { display: flex; justify-content: space-between; align-items: center; padding: 1px; background-color: #a3a5a7; color: white; }
@@ -33,11 +33,11 @@
 <div class="button-container">
     <select id="dproject"><option value="screenbros">screenbros</option></select>
     <select id="dcomp"></select>
-    <button onclick="add_component()">Add Component</button>
-    <button onclick="save()">Save</button>
-    <button onclick="load()">Load</button>
-    <button>Freeze</button>
-    <button onclick="refresh()">Refresh</button>
+    <button class="dbutton" onclick="add_component()">Add Component</button>
+    <button class="dbutton" onclick="save()">Save</button>
+    <button class="dbutton" onclick="load()">Load</button>
+    <button class="dbutton">Freeze</button>
+    <button class="dbutton" onclick="refresh()">Refresh</button>
 </div>
 
 <div class="container">
@@ -78,7 +78,7 @@
             </div>
 
             <div class="input-group">
-                <button onclick="deleteComponent()">Delete</button>
+                <button class="dbutton" onclick="deleteComponent()">Delete</button>
             </div>
         </div>
     </div> 
