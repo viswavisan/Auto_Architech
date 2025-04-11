@@ -10,7 +10,7 @@ $(document).ready(function() {
     fetch_data()
 
     });
-
+  const baseurl='http://localhost:7000/'
   function logout() {
     document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
     document.cookie = "expiry=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
@@ -19,10 +19,10 @@ $(document).ready(function() {
   function fetch_data(){
     const data = JSON.stringify({"query": 'select'});
     Promise.all([
-      fetch("get_datas", { method: "POST", headers: { 'Content-Type': 'application/json' }, body: data }).then(response => response.text()),
-      fetch("get_count", { method: "POST", headers: { 'Content-Type': 'application/json' }, body: data }).then(response => response.json())])
+      fetch(`${baseurl}get_datas`, { method: "POST", headers: { 'Content-Type': 'application/json' }, body: data }).then(response => response.text()),
+      fetch(`${baseurl}get_count`, { method: "POST", headers: { 'Content-Type': 'application/json' }, body: data }).then(response => response.json())])
                 .then(([detailsResult, countResult]) => {create_table(detailsResult);document.getElementById('count').innerHTML = countResult;})
-                .catch(error => console.error('Error:', error));
+                .catch(error => console.log('Error:', error));
   }
 
   function create_table(result) {

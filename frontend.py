@@ -67,10 +67,9 @@ async def home(request: Request,access_token: str | None = Cookie(None),expiry: 
         if not access_token:raise HTTPException(status_code=400, detail="No access token received")
 
         user_response = await client.get("https://api.github.com/user",headers={"Authorization": f"Bearer {access_token}"},)
-        print(user_response.text)
         if user_response.status_code != 200:raise HTTPException(status_code=400, detail="Failed to fetch user information")
         user_info = user_response.json()
-        log_user(user_info,request)
+        # log_user(user_info,request)
         
     return templates.TemplateResponse('architecture.html', context={'request': request,'user':user_info['login'],'profile':user_info['avatar_url']})
 
